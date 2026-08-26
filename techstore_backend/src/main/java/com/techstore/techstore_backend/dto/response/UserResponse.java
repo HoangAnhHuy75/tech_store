@@ -1,27 +1,24 @@
-package com.techstore.techstore_backend.entity;
+package com.techstore.techstore_backend.dto.response;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-@Entity
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class UserResponse {
     String id;
-    String username;
-    String password;
     String name;
     String phone;
+    String username;
+    String password;
     LocalDate dob;
     Set<String> roles;
 }
