@@ -17,7 +17,9 @@ public enum ErrorCode {
     UNAUTHENTICATED(1003,"Không thể xác thực",HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1004,"Không có quyền truy cập",HttpStatus.FORBIDDEN),
     CATEGORY_EXIST(1005,"Loại sản phẩm đã tồn tại",HttpStatus.BAD_REQUEST),
-    CATEGORY_NOT_EXIST(1006,"Loại sản phẩm không tô tại",HttpStatus.BAD_REQUEST);
+    CATEGORY_NOT_EXIST(1006,"Loại sản phẩm không tô tại",HttpStatus.BAD_REQUEST),
+    SPECIFICATION_NOT_EXIST(1007,"Thông số kỹ thuật không tồn tại",HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_EXIST(1008,"Sản phẩm không tồn tại",HttpStatus.BAD_REQUEST);
     int code;
     String message;
     HttpStatus httpStatus;

@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,4 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class CategoryRequest {
     String name;
     Integer parentId;
+    List<Integer> specificationIds;
 }

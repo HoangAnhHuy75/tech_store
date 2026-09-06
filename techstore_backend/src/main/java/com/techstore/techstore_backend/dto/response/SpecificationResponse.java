@@ -1,19 +1,15 @@
 package com.techstore.techstore_backend.dto.response;
 
-
-import com.techstore.techstore_backend.entity.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryResponse {
+public class SpecificationResponse {
     Integer id;
     String name;
-    Category parent;
+    String unit;
 }

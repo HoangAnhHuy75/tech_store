@@ -10,4 +10,5 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     public boolean existsByName(String name);
     public List<Category> findByParentIdIsNull();
+    public List<Category> findByParentId(Integer id);
 }

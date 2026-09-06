@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { findAll } from "@/services/categoryService";
+import { findAll, findByParentId } from "@/services/categoryService";
 import { findByParentIdIsNill } from "@/services/categoryService";
 interface CategoryOption {
     id: number;
@@ -10,6 +10,7 @@ interface CategoryOption {
 export default function useCategory() {
     const [categories, setCategories] = useState<CategoryOption[]>([]);
     const [categoriesParent, setCategoriesParent] = useState<CategoryOption[]>([]);
+    const [categoriesParentId, setCategoriesParentId] = useState<CategoryOption[]>([]);
     const fetchCategories = async () => {
         try {
             const response = await findAll();
@@ -18,6 +19,17 @@ export default function useCategory() {
             console.error("Lỗi khi lấy danh sách category:", error);
         }
     };
+
+    const fetchCategoriesParentId = async (id: number) => {
+        try {
+            const response = await findByParentId(id);
+            setCategoriesParentId(response);
+        } catch (error) {
+            console.error("Lỗi khi lấy danh sách category:", error);
+        }
+    };
+
+    
     
     const fetchCategoriesParent = async () => {
         try {
@@ -28,5 +40,5 @@ export default function useCategory() {
         }
     }
 
-    return {categories, fetchCategories, categoriesParent, fetchCategoriesParent};
+    return {categories, fetchCategories, categoriesParent, fetchCategoriesParent, categoriesParentId,setCategoriesParentId, fetchCategoriesParentId};
 }

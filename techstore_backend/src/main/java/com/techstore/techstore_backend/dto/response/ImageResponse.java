@@ -1,6 +1,6 @@
 package com.techstore.techstore_backend.dto.response;
 
-import com.techstore.techstore_backend.entity.Category;
+import com.techstore.techstore_backend.entity.Product;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,11 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductResponse {
+public class ImageResponse {
     Integer id;
-    String name;
-    Double price;
-    Integer quantity;
-    Boolean isActive;
-    Category category;
+    String urlImage;
+    Product product;
 }

@@ -46,4 +46,14 @@ public class CategoryController {
                 .result(categories)
                 .build());
     }
+
+    @GetMapping("/parents/{id}")
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> findByParentId(@PathVariable Integer id) {
+        List<CategoryResponse> categories = categoryService.findByParentId(id);
+        return ResponseEntity.ok(ApiResponse.<List<CategoryResponse>>builder()
+                .code(201)
+                .message("Lấy danh sách loại sản phẩm có parentId thành công")
+                .result(categories)
+                .build());
+    }
 }

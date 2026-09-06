@@ -29,10 +29,103 @@ export default function Header() {
                             </Link>
                         </li>
 
-                        <li>
+                        <li className="relative group">
                             <Link href="/products" className="hover:text-blue-600 transition-colors">
                                 Sản phẩm
                             </Link>
+
+                            {/* Dropdown */}
+                            <div className=" absolute left-1/2 top-full z-50 w-[700px] -translate-x-1/2 
+                            rounded-xl border border-gray-200 bg-white shadow-xl invisible opacity-0 
+                            translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0
+                            transition-all duration-300">
+                                <div className="grid grid-cols-3 gap-6 p-6">
+
+                                    {/* Laptop */}
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900">
+                                            Laptop
+                                        </h3>
+
+                                        <div className="mt-3 space-y-2">
+                                            <Link
+                                                href="/category/laptop-gaming"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                Laptop Gaming
+                                            </Link>
+
+                                            <Link
+                                                href="/category/laptop-office"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                Laptop Văn phòng
+                                            </Link>
+
+                                            <Link
+                                                href="/category/macbook"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                MacBook
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                    {/* Điện thoại */}
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900">
+                                            Điện thoại
+                                        </h3>
+
+                                        <div className="mt-3 space-y-2">
+                                            <Link
+                                                href="/category/iphone"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                iPhone
+                                            </Link>
+
+                                            <Link
+                                                href="/category/samsung"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                Samsung
+                                            </Link>
+
+                                            <Link
+                                                href="/category/xiaomi"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                Xiaomi
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                    {/* Phụ kiện */}
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900">
+                                            Phụ kiện
+                                        </h3>
+
+                                        <div className="mt-3 space-y-2">
+                                            <Link
+                                                href="/category/headphone"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                Tai nghe
+                                            </Link>
+
+                                            <Link
+                                                href="/category/smartwatch"
+                                                className="block text-sm text-gray-500 hover:text-blue-600"
+                                            >
+                                                Smartwatch
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </li>
 
                         <li>
@@ -63,7 +156,7 @@ export default function Header() {
                     </Button>
 
                     {/* Account */}
-                    <Button variant="ghost" size="icon"  asChild  aria-label="Account">
+                    <Button variant="ghost" size="icon" asChild aria-label="Account">
                         <Link href="/login">
                             <User className="h-5 w-5 text-gray-700" />
                         </Link>
@@ -79,7 +172,7 @@ export default function Header() {
 
                     {/* Mobile Menu Button */}
                     <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                        {isMenuOpen ? ( <X className="h-6 w-6 text-gray-700" />) : (<Menu className="h-6 w-6 text-gray-700" />)}
+                        {isMenuOpen ? (<X className="h-6 w-6 text-gray-700" />) : (<Menu className="h-6 w-6 text-gray-700" />)}
                     </Button>
                 </div>
             </div>
@@ -89,7 +182,7 @@ export default function Header() {
                 <nav className="lg:hidden border-t border-gray-100 bg-white">
                     <ul className="flex flex-col px-4 py-3 font-medium text-gray-600">
                         <li>
-                            <Link  href="/" onClick={() => setIsMenuOpen(false)} className="block py-3 hover:text-blue-600 transition-colors">
+                            <Link href="/" onClick={() => setIsMenuOpen(false)} className="block py-3 hover:text-blue-600 transition-colors">
                                 Trang chủ
                             </Link>
                         </li>
