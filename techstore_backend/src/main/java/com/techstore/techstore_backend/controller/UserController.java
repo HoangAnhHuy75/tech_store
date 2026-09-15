@@ -50,4 +50,19 @@ public class UserController {
                 .result(userReponse)
                 .build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+            @PathVariable String id,
+            @RequestBody UserRequest request) {
+
+        UserResponse userResponse = userService.updateUser(id, request);
+
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Cập nhật người dùng thành công")
+                .result(userResponse)
+                .build()
+        );
+    }
 }

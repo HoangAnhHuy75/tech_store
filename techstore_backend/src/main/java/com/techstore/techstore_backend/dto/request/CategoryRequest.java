@@ -15,5 +15,5 @@ import java.util.Set;
 public class CategoryRequest {
     String name;
     Integer parentId;
-    List<Integer> specificationIds;
+    Set<Integer> specificationIds;
 }

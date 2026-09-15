@@ -31,10 +31,4 @@ public class Category {
     @JoinColumn(name = "parent_id")
     Category parent;
 
-    @ManyToMany
-    @JoinTable(name = "category_specifications",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "specification_id"))
-    @JsonIgnore
-    Set<Specification> specifications = new HashSet<>();
 }

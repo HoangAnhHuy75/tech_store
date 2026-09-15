@@ -3,16 +3,19 @@ package com.techstore.techstore_backend.service;
 import com.techstore.techstore_backend.dto.request.CategoryRequest;
 import com.techstore.techstore_backend.dto.response.CategoryResponse;
 import com.techstore.techstore_backend.entity.Category;
+import com.techstore.techstore_backend.entity.CategorySpecification;
 import com.techstore.techstore_backend.entity.Specification;
 import com.techstore.techstore_backend.exception.AppException;
 import com.techstore.techstore_backend.exception.ErrorCode;
 import com.techstore.techstore_backend.repository.CategoryRepository;
+import com.techstore.techstore_backend.repository.CategorySpecificationRepository;
 import com.techstore.techstore_backend.repository.SpecificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -22,8 +25,10 @@ public class CategoryService {
     @Autowired
     SpecificationRepository specificationRepository;
 
-    public CategoryResponse createCategory(CategoryRequest categoryRequest) {
+    @Autowired
+    CategorySpecificationRepository categorySpecificationRepository;
 
+    public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         // Kiểm tra category đã tồn tại
         if (categoryRepository.existsByName(categoryRequest.getName())) {
             throw new AppException(ErrorCode.CATEGORY_EXIST);
@@ -42,14 +47,22 @@ public class CategoryService {
                 .parent(parentCategory)
                 .build();
 
-        // Lấy Specification
+        // Lưu Category
+        Category savedCategory = categoryRepository.save(category);
+
+        // Lấy các Specification được chọn
         if (categoryRequest.getSpecificationIds() != null && !categoryRequest.getSpecificationIds().isEmpty()) {
             List<Specification> specifications = specificationRepository.findAllById(categoryRequest.getSpecificationIds());
-            category.setSpecifications(new HashSet<>(specifications));
+
+            // Tạo quan hệ Category - Specification
+            for (Specification specification : specifications) {
+                CategorySpecification categorySpecification = new CategorySpecification();
+                categorySpecification.setCategory(savedCategory);
+                categorySpecification.setSpecification(specification);
+                categorySpecificationRepository.save(categorySpecification);
+            }
         }
 
-        // Lưu Category + quan hệ ManyToMany
-        Category savedCategory = categoryRepository.save(category);
         return mapToCategoryResponse(savedCategory);
     }
 

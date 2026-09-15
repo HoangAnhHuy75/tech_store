@@ -3,6 +3,7 @@ package com.techstore.techstore_backend.service;
 import com.techstore.techstore_backend.dto.request.SpecificationRequest;
 import com.techstore.techstore_backend.dto.response.SpecificationResponse;
 import com.techstore.techstore_backend.entity.Specification;
+import com.techstore.techstore_backend.repository.CategorySpecificationRepository;
 import com.techstore.techstore_backend.repository.SpecificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class SpecificationService {
 
     @Autowired
     private SpecificationRepository specificationRepository;
+
+    @Autowired
+    private CategorySpecificationRepository categorySpecificationRepository;
 
     public SpecificationResponse createSpecification(SpecificationRequest request) {
         Specification specification = Specification.builder()
@@ -36,7 +40,7 @@ public class SpecificationService {
     }
 
     public List<SpecificationResponse> findByCategories_Id(Integer id){
-        List<Specification> specifications = specificationRepository.findByCategories_Id(id);
+        List<Specification> specifications = categorySpecificationRepository.findSpecificationsByCategoryId(id);
         return specifications.stream()
                 .map(this::mapToSpecificationResponse)
                 .toList();

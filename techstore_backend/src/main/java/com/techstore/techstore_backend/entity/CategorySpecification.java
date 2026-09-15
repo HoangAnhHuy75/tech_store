@@ -4,23 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "specifications")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Specification {
+public class CategorySpecification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    Category category;
 
-    String unit;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "specification_id")
+    Specification specification;
 }

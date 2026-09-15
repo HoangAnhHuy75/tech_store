@@ -26,7 +26,7 @@ public class ImageController {
         List<ImageResponse> imageResponses = imageService.createImages(files, productId);
         return ResponseEntity.ok(ApiResponse.<List<ImageResponse>>builder()
                 .code(201)
-                .message("Them ảnh cho sản phẩm thành công")
+                .message("Thêm ảnh cho sản phẩm thành công")
                 .result(imageResponses)
                 .build());
     }

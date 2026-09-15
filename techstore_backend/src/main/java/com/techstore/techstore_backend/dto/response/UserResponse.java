@@ -1,5 +1,6 @@
 package com.techstore.techstore_backend.dto.response;
 
+import com.techstore.techstore_backend.entity.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -20,5 +21,5 @@ public class UserResponse {
     String username;
     String password;
     LocalDate dob;
-    Set<String> roles;
+    Set<Role> roles;
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -25,4 +26,5 @@ public class UserRequest {
     @Size(min = 6, message = "Password phải dài hơn hoặc bằng 6 kí tự")
     String password;
     LocalDate dob;
+    Set<String> roleNames;
 }
