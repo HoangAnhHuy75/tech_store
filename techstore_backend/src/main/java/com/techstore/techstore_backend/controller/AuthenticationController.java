@@ -2,6 +2,7 @@ package com.techstore.techstore_backend.controller;
 
 import com.techstore.techstore_backend.dto.request.AuthenticationRequest;
 import com.techstore.techstore_backend.dto.request.IntrospectRequest;
+import com.techstore.techstore_backend.dto.request.LogoutRequest;
 import com.techstore.techstore_backend.dto.response.ApiResponse;
 import com.techstore.techstore_backend.dto.response.AuthenticationResponse;
 import com.techstore.techstore_backend.dto.response.IntrospectResponse;
@@ -16,8 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
-    @Autowired
-    private AuthenticationService authenticationService;
+
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationController(AuthenticationService authenticationService){
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthenticationResponse>> login(@RequestBody AuthenticationRequest request) {
@@ -28,6 +33,15 @@ public class AuthenticationController {
                 .result(authenticationResponse)
                 .build());
 
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws Exception{
+        authenticationService.logOut(request);
+        return ApiResponse.<Void>builder()
+                .code(201)
+                .message("Logout thành công")
+                .build();
     }
 
     @PostMapping("/introspect")
