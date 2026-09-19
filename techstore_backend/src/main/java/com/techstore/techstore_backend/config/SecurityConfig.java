@@ -28,14 +28,16 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS = {"/api/users","/api/auth/login", "/api/auth/introspect", "/api/auth/logout"};
+    private final String[] PUBLIC_ENDPOINTS = {"/api/users","/api/auth/login", "/api/auth/introspect", "/api/auth/logout", "/api/auth/refresh"};
 
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String jwtSignerKey;
 
-    @Autowired
-    CustomJwtDecoder customJwtDecoder;
+    private final CustomJwtDecoder customJwtDecoder;
+    public SecurityConfig(CustomJwtDecoder customJwtDecoder){
+        this.customJwtDecoder = customJwtDecoder;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {

@@ -8,8 +8,8 @@ spring:
       max-request-size: 10MB
   datasource:
     url: jdbc:postgresql://localhost:5432/techstore
-    username: postgres
-    password: 123456
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,3 +19,5 @@ spring:
 
 jwt:
   signerKey: "8aec10e5079dea67efc958810f4331ff586886cccf3abb60a66fb6e31b3c97d4"
+  valid-duration: 7200
+  refreshable-duration: 72000
