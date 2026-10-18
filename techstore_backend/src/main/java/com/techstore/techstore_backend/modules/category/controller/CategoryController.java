@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -19,12 +19,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(@RequestBody CategoryRequest request){
+    public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(@RequestBody CategoryRequest request) {
         CategoryResponse categoryResponse = categoryService.createCategory(request);
         return ResponseEntity.ok(ApiResponse.<CategoryResponse>builder()
-                        .code(201)
-                        .message("Thêm loại sản phâm thành công")
-                        .result(categoryResponse)
+                .code(201)
+                .message("Thêm loại sản phâm thành công")
+                .result(categoryResponse)
                 .build());
     }
 
@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
     @GetMapping("/parents")
-    public ResponseEntity<ApiResponse<List<CategoryResponse>>> findByParentIdIsNull(){
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> findByParentIdIsNull() {
         List<CategoryResponse> categories = categoryService.findByParentIdIsNull();
         return ResponseEntity.ok(ApiResponse.<List<CategoryResponse>>builder()
                 .code(201)
