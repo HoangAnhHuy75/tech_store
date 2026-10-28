@@ -35,7 +35,6 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .phone(request.getPhone())
-                .dob(request.getDob())
                 .build();
         if (request.getRoleNames() != null) {
             List<Role> roles = roleRepository.findAllById(request.getRoleNames());
@@ -44,11 +43,10 @@ public class UserService {
         return mapToUserResponse(userRepository.save(user));
     }
 
-    public UserResponse updateUser(String id, UserRequest request) {
+    public UserResponse updateUser(Integer id, UserRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
         user.setName(request.getName());
         user.setPhone(request.getPhone());
-        user.setDob(request.getDob());
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -70,7 +68,7 @@ public class UserService {
     }
 
     @PostAuthorize("returnObject.username == authentication.name")
-    public UserResponse findById(String id){
+    public UserResponse findById(Integer id){
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
         return mapToUserResponse(user);
     }
@@ -82,7 +80,7 @@ public class UserService {
                 .password(user.getPassword())
                 .name(user.getName())
                 .phone(user.getPhone())
-                .dob(user.getDob())
+                .userType(user.getUserType())
                 .roles(user.getRoles())
                 .build();
     }

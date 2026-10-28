@@ -1,6 +1,8 @@
 package com.techstore.techstore_backend.modules.user.dto.request;
 
+import com.techstore.techstore_backend.modules.user.enums.UserType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -29,7 +31,6 @@ public class UserRequest {
     @Size(min = 6, message = "Password phải dài hơn hoặc bằng 6 kí tự")
     String password;
 
-    LocalDate dob;
-
+    @NotNull(message = "Role không được null")
     Set<String> roleNames;
 }

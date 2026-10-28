@@ -1,6 +1,7 @@
 package com.techstore.techstore_backend.modules.user.entity;
 
 import com.techstore.techstore_backend.modules.role.entity.Role;
+import com.techstore.techstore_backend.modules.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,15 +19,25 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name="username", unique = true, nullable = false)
     String username;
+
+    @Column(name="password", nullable = false)
     String password;
+
+    @Column(name="name")
     String name;
+
+    @Column(name="phone")
     String phone;
-    LocalDate dob;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_type")
+    UserType userType = UserType.NORMAL;
 
     @ManyToMany
     Set<Role> roles = new HashSet<>();

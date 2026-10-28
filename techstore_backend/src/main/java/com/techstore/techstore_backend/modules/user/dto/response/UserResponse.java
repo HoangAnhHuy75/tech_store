@@ -1,6 +1,7 @@
 package com.techstore.techstore_backend.modules.user.dto.response;
 
 import com.techstore.techstore_backend.modules.role.entity.Role;
+import com.techstore.techstore_backend.modules.user.enums.UserType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,11 +14,11 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    String id;
+    Integer id;
     String name;
     String phone;
     String username;
     String password;
-    LocalDate dob;
+    UserType userType;
     Set<Role> roles;
 }

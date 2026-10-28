@@ -35,17 +35,17 @@ public class UserController {
         log.info("Username {}:",authentication.getName());
         List<UserResponse> listUser = userService.getAllUsers();
         return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
-                .code(201)
+                .code(200)
                 .message("Lấy danh sách user thành công")
                 .result(listUser)
                 .build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> findById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<UserResponse>> findById(@PathVariable Integer id) {
         UserResponse userReponse = userService.findById(id);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
-                .code(201)
+                .code(200)
                 .message("Tìm kiếm theo ID thành công")
                 .result(userReponse)
                 .build());
@@ -53,7 +53,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
-            @PathVariable String id,
+            @PathVariable Integer id,
             @RequestBody UserRequest request) {
 
         UserResponse userResponse = userService.updateUser(id, request);
