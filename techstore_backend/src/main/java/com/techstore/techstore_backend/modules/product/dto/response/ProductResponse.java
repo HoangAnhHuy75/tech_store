@@ -4,6 +4,8 @@ import com.techstore.techstore_backend.modules.category.entity.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class ProductResponse {
     Integer id;
     String name;
-    Double price;
+    BigDecimal price;
     Integer quantity;
     Boolean isActive;
     Category category;

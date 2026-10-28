@@ -16,7 +16,11 @@ import com.techstore.techstore_backend.modules.product.repository.ProductSpecifi
 import com.techstore.techstore_backend.modules.specification.repository.SpecificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +36,6 @@ public class ProductService {
                 .name(request.getName())
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
-                .isActive(true)
                 .category(category)
                 .build());
         createProductSpecification(product, request.getProductSpecificationRequests());
@@ -40,8 +43,11 @@ public class ProductService {
     }
 
     public void createProductSpecification(Product product, List<ProductSpecificationRequest> productSpecificationRequests) {
+        List<Integer> specificationIds = productSpecificationRequests.stream().map(ProductSpecificationRequest::getSpecificationId).toList();
+        List<Specification> specifications = specificationRepository.findAllById(specificationIds);
+        Map<Integer, Specification> specificationMaps = specifications.stream().collect(Collectors.toMap(Specification::getId, Specification -> Specification));
         for (ProductSpecificationRequest request : productSpecificationRequests) {
-            Specification specification = specificationRepository.findById(request.getSpecificationId()).orElseThrow(() -> new AppException(ErrorCode.SPECIFICATION_NOT_EXIST));
+            Specification specification = specificationMaps.get(request.getSpecificationId());
             ProductSpecification productSpecification = ProductSpecification.builder()
                     .product(product)
                     .specification(specification)
