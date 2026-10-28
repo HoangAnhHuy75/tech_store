@@ -26,11 +26,11 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/users",
-            "/api/auth/login",
-            "/api/auth/introspect",
-            "/api/auth/logout",
-            "/api/auth/refresh"};
+            "/api/v1/users",
+            "/api/v1/auth/login",
+            "/api/v1/auth/introspect",
+            "/api/v1/auth/logout",
+            "/api/v1/auth/refresh"};
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated());
         // Đăng ký Authentication provider để decode JWT
