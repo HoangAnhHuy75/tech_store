@@ -134,10 +134,6 @@ public class AuthenticationService {
         SignedJWT signedJwt = SignedJWT.parse(token);
 
 
-        System.out.println(signedJwt.getHeader());
-        System.out.println(signedJwt.getJWTClaimsSet());
-        System.out.println(signedJwt.getSignature());
-
         boolean valid = signedJwt.verify(verifier);
         if (!valid) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
