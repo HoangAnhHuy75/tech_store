@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Data
 @AllArgsConstructor
+@Table(name = "category_specifications")
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
