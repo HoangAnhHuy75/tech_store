@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "campaigns")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Campaign {
@@ -24,6 +25,7 @@ public class Campaign {
     @Column(name = "name", nullable = false)
     String name;
 
+    @Builder.Default
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     CampaignStatus status = CampaignStatus.UPCOMING;
@@ -45,6 +47,6 @@ public class Campaign {
     @Column(name = "updated_at", nullable = false)
     LocalDateTime updatedAt;
 
-    @Column(name = "is_delete", nullable = false)
-    boolean isDelete = false;
+    @Column(name = "is_deleted", nullable = false)
+    boolean isDeleted = false;
 }

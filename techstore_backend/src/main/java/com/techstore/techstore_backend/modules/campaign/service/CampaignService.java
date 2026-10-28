@@ -90,7 +90,7 @@ public class CampaignService {
                 .status(campaign.getStatus())
                 .createdAt(campaign.getCreatedAt())
                 .updatedAt(campaign.getUpdatedAt())
-                .isDelete(campaign.isDelete())
+                .isDelete(campaign.isDeleted())
                 .build();
     }
 
