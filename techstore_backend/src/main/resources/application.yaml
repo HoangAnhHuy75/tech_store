@@ -17,10 +17,16 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6378}
+      timeout: 2000ms
+
 jwt:
   secret: "8aec10e5079dea67efc958810f4331ff586886cccf3abb60a66fb6e31b3c97d4"
   refresh_secret: "c4cca68d1ae4bf193ca5ee59649e92d5ffe3be74de24939373a72f0d6914f7f0"
-  valid_duration: 40
+  valid_duration: 3600
   refresh_duration: 72000
 
 cloudinary:
