@@ -15,7 +15,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createImages } from "@/services/imageService";
 
 type CreateProductFormValues = z.infer<typeof productSchema>;
-export default function CreateProductForm() {
+
+interface CreateProductFormProps {
+    onCreated?: () => void;
+}
+
+export default function CreateProductForm({ onCreated }: CreateProductFormProps) {
     const { categoriesParent, fetchCategoriesParent, categoriesParentId, setCategoriesParentId, fetchCategoriesParentId } = useCategory();
     const { categorySpecifications, setCategorySpecifications, fetchCategorySpecifications } = useSpecification();
     const [images, setImages] = useState<File[]>([]);
@@ -27,7 +32,7 @@ export default function CreateProductForm() {
             price: "",
             quantity: "",
             categoryId: "",
-            specifications: [],
+            productSpecificationRequests: [],
         }
     });
 
@@ -36,7 +41,7 @@ export default function CreateProductForm() {
     }, [])
 
     useEffect(() => {
-        setValue("specifications", categorySpecifications.map((specification) => ({
+        setValue("productSpecificationRequests", categorySpecifications.map((specification) => ({
             specificationId: specification.id,
             value: "",
         }))
@@ -58,10 +63,11 @@ export default function CreateProductForm() {
             price: Number(data.price),
             quantity: Number(data.quantity),
             categoryId: Number(data.categoryId),
-            specifications: data.specifications.map((specification) => ({
+            productSpecificationRequests: data.productSpecificationRequests.map((specification) => ({
                 specificationId: specification.specificationId,
                 value: specification.value,
-            })),
+            })
+            ),
         };
         return await createProduct(productData);
     };
@@ -78,7 +84,8 @@ export default function CreateProductForm() {
             return;
         }
         const productId = productResponse.result.id;
-        
+        onCreated?.();
+
         // Bước 2: Upload ảnh cho sản phẩm vừa tạo
         const imageResponse = await uploadImages(images, productId);
 
@@ -196,7 +203,7 @@ export default function CreateProductForm() {
                                 </Label>
 
                                 <div className="col-span-2 flex items-center gap-2">
-                                    <Input {...register(`specifications.${index}.value`)} />
+                                    <Input {...register(`productSpecificationRequests.${index}.value`)} />
 
                                     {specification.unit && (
                                         <span className="text-sm text-gray-500">
@@ -204,9 +211,9 @@ export default function CreateProductForm() {
                                         </span>
                                     )}
                                 </div>
-                                {errors.specifications?.[index]?.value && (
+                                {errors.productSpecificationRequests?.[index]?.value && (
                                     <p className="col-span-3 text-sm text-red-500">
-                                        {errors.specifications[index].value.message}
+                                        {errors.productSpecificationRequests[index].value.message}
                                     </p>
                                 )}
                             </div>
@@ -238,7 +245,7 @@ export default function CreateProductForm() {
 
                     {/* Preview */}
                     {previews.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4">
+                        <div className="grid grid-cols-3 gap-3 mt-3 mx-3">
                             {previews.map((url, idx) => (
                                 <div key={idx} className="relative overflow-hidden rounded-xl border border-gray-200 shadow-sm">
                                     <Image width={300} height={50} src={url} alt={`preview-${idx}`} className="w-full h-32 object-cover hover:scale-105 transition-transform duration-300" />
