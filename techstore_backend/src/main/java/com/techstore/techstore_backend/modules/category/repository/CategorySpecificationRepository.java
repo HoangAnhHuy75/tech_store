@@ -17,4 +17,8 @@ public interface CategorySpecificationRepository extends JpaRepository<CategoryS
             WHERE cs.category.id = :categoryId
             """)
     List<Specification> findSpecificationsByCategoryId(@Param("categoryId") Integer categoryId);
+
+    List<CategorySpecification> findByCategoryId(Integer categoryId);
+
+    List<CategorySpecification> findBySpecificationId(Integer specificationId);
 }
