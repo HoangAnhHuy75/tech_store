@@ -40,17 +40,17 @@ public class AuthenticationController {
                         .sameSite("Strict")
                         .build();
 
-//        AuthenticationResponse response = AuthenticationResponse.builder()
-//                .valid(true)
-//                .token(authenticationResponse.getToken())
-//                .build();
+        AuthenticationResponse response = AuthenticationResponse.builder()
+                .authenticated(true)
+                .token(authenticationResponse.getToken())
+                .build();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(
                         ApiResponse.<AuthenticationResponse>builder()
                                 .code(201)
                                 .message("Login thành công")
-                                .result(authenticationResponse)
+                                .result(response)
                                 .build());
     }
 
@@ -115,10 +115,10 @@ public class AuthenticationController {
                         .sameSite("Strict")
                         .build();
 
-//        AuthenticationResponse response = AuthenticationResponse.builder()
-//                .token(authenticationResponse.getToken())
-//                .authenticated(true)
-//                .build();
+        AuthenticationResponse response = AuthenticationResponse.builder()
+                .token(authenticationResponse.getToken())
+                .authenticated(true)
+                .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -126,7 +126,7 @@ public class AuthenticationController {
                         ApiResponse.<AuthenticationResponse>builder()
                                 .code(201)
                                 .message("Refresh token thành công")
-                                .result(authenticationResponse)
+                                .result(response)
                                 .build());
     }
 

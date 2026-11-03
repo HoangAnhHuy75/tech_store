@@ -19,6 +19,7 @@ import com.techstore.techstore_backend.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
+    private final RedisTemplate<String,String> redisTemplate;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
 
     @Value("${jwt.secret}")
@@ -81,14 +84,14 @@ public class AuthenticationService {
 
     public void logout(LogoutRequest request) throws JOSEException, ParseException {
         try {
-            SignedJWT signedJWT = verifyToken(request.getToken(), true);
+            SignedJWT signedJWT = verifyToken(request.getToken(), false);
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                    .id(jti)
-                    .expirationTime(expirationTime)
-                    .build();
-            invalidatedTokenRepository.save(invalidatedToken);
+            long ttl = expirationTime.getTime() - System.currentTimeMillis();
+            if (ttl > 0) {
+                String token = "invalidated_token:" + jti;
+                redisTemplate.opsForValue().set(token, "true", ttl, TimeUnit.MILLISECONDS);
+            }
         } catch (AppException e) {
             log.info("Token is expired");
         }
@@ -97,11 +100,11 @@ public class AuthenticationService {
             SignedJWT signedJWT = verifyToken(request.getRefreshToken(), true);
             String jti = signedJWT.getJWTClaimsSet().getJWTID();
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-            InvalidatedToken invalidatedRefreshToken = InvalidatedToken.builder()
-                    .id(jti)
-                    .expirationTime(expirationTime)
-                    .build();
-            invalidatedTokenRepository.save(invalidatedRefreshToken);
+            long ttl = expirationTime.getTime() - System.currentTimeMillis();
+            if (ttl > 0) {
+                String token = "invalidated_token:" + jti;
+                redisTemplate.opsForValue().set(token, "true", ttl, TimeUnit.MILLISECONDS);
+            }
         } catch (AppException e) {
             log.info("Token is expired");
         }
@@ -111,11 +114,11 @@ public class AuthenticationService {
         SignedJWT signedJwt = verifyToken(refreshToken, true);
         String jti = signedJwt.getJWTClaimsSet().getJWTID();
         Date expirationTime = signedJwt.getJWTClaimsSet().getExpirationTime();
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jti)
-                .expirationTime(expirationTime)
-                .build();
-        invalidatedTokenRepository.save(invalidatedToken);
+        long ttl = expirationTime.getTime() - System.currentTimeMillis();
+        if(ttl > 0){
+            String token = "invalidated_token:" +jti;
+            redisTemplate.opsForValue().set(token,"true",ttl,TimeUnit.MILLISECONDS);
+        }
         String username = signedJwt.getJWTClaimsSet().getSubject();
         User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
         String token = generateToken(user, false);
