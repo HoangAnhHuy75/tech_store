@@ -3,11 +3,32 @@
 import { useState } from "react";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
+import { Search, User, ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "@/services/authService";
+import { useAuthStore } from "@/stores/authStore";
+import { toast } from "sonner";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const router = useRouter();
+    const token = useAuthStore((state) => state.token);
+    const role = useAuthStore((state) => state.role);
+    const checkRoleAdmin = () => {
+        if (!token || role !== "ADMIN") {
+            toast.error("Bạn không có quyền truy cập vào trang này");
+        } else {
+            router.push("/admin");
+        }
+    }
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+        } finally {
+            router.push("/");
+        }
+    };
 
     return (
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -150,17 +171,32 @@ export default function Header() {
 
                 {/* Right Actions */}
                 <div className="flex items-center space-x-1">
+                    <div className="hidden">
+                        <Button variant="outline" size="sm" asChild>
+                            <Link href="/login">Đăng nhập</Link>
+                        </Button>
+                        <Button size="sm" asChild>
+                            <Link href="/register">Đăng ký</Link>
+                        </Button>
+                    </div>
+
                     {/* Search */}
                     <Button variant="ghost" size="icon" aria-label="Search">
                         <Search className="h-5 w-5 text-gray-700" />
                     </Button>
 
                     {/* Account */}
-                    <Button variant="ghost" size="icon" asChild aria-label="Account">
-                        <Link href="/login">
+                    <div className="relative group">
+                        <Button variant="ghost" size="icon" aria-label="Account" aria-haspopup="menu">
                             <User className="h-5 w-5 text-gray-700" />
-                        </Link>
-                    </Button>
+                        </Button>
+                        <div className="invisible absolute right-0 top-full z-50 translate-y-2 rounded-xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                            <div className="flex items-center  justify-between">
+                                <Button onClick={() => { checkRoleAdmin() }} className="bg-white cursor-pointer text-black hover:bg-white">Đến trang admin</Button>
+                                <ChevronDown className="h-4 w-4 -rotate-90" />
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Cart */}
                     <Button variant="ghost" size="icon" className="relative" aria-label="Cart">
@@ -169,6 +205,23 @@ export default function Header() {
                             0
                         </span>
                     </Button>
+
+                    <div className="ml-3 hidden items-center gap-3 sm:flex">
+                        {token ? (
+                            <Button type="button" variant="outline" className="px-4 text-base font-semibold" onClick={() => void handleLogout()}>
+                                Đăng xuất
+                            </Button>
+                        ) : (
+                            <>
+                                <Button variant="outline" className="px-4 text-base font-semibold" asChild>
+                                    <Link href="/login">Đăng nhập</Link>
+                                </Button>
+                                <Button className="px-4 text-base font-semibold" asChild>
+                                    <Link href="/register">Đăng ký</Link>
+                                </Button>
+                            </>
+                        )}
+                    </div>
 
                     {/* Mobile Menu Button */}
                     <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu" onClick={() => setIsMenuOpen(!isMenuOpen)}>

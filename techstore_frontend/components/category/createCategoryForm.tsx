@@ -11,23 +11,46 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useSpecification from "@/hooks/useSpecification";
-import { createCategory } from "@/services/categoryService";
+import { createCategory, updateCategory } from "@/services/categoryService";
+import type { CategoryOption } from "@/hooks/useCategory";
 
 type CreateCategoryFormValues = z.infer<typeof categorySchema>;
 
 
-export default function CreateCategoryForm() {
+interface CreateCategoryFormProps {
+    category?: CategoryOption | null;
+    onSaved?: () => void;
+}
+
+export default function CreateCategoryForm({ category, onSaved }: CreateCategoryFormProps) {
     const { categoriesParent, fetchCategoriesParent } = useCategory();
-    const { specifications, fetchSpecifications } = useSpecification();
+    const { specifications, fetchSpecifications, fetchCategorySpecifications } = useSpecification();
 
     const { register, handleSubmit, setValue, control, reset, formState: { errors, isSubmitting } } = useForm<CreateCategoryFormValues>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
-            name: "",
-            parentId: "",
+            name: category?.name ?? "",
+            parentId: category?.parent?.id?.toString() ?? "",
             specificationIds: [],
         }
     });
+
+    useEffect(() => {
+        reset({
+            name: category?.name ?? "",
+            parentId: category?.parent?.id?.toString() ?? "",
+            specificationIds: [],
+        });
+    }, [category, reset]);
+
+    useEffect(() => {
+        if (!category) {
+            return;
+        }
+        void fetchCategorySpecifications(category.id).then((categorySpecs) => {
+            setValue("specificationIds", categorySpecs.map((specification) => specification.id));
+        });
+    }, [category, setValue]);
 
     const selectedSpecifications = useWatch({
         control,
@@ -50,14 +73,19 @@ export default function CreateCategoryForm() {
 
     const onSubmit = async (data: CreateCategoryFormValues) => {
         try {
-            const response = await createCategory({
+            const categoryData = {
                 name: data.name,
                 parentId: data.parentId ? Number(data.parentId) : null,
                 specificationIds: data.specificationIds,
-            });
-            if (response?.code === 201) {
-                await fetchCategoriesParent();
-                reset()
+            };
+            const response = category
+                ? await updateCategory(category.id, categoryData)
+                : await createCategory(categoryData);
+            if (response?.code === 200 || response?.code === 201) {
+                onSaved?.();
+                if (!category) {
+                    reset();
+                }
             }
         } catch (error: unknown) {
             console.error("Lỗi khi tạo category:", error);

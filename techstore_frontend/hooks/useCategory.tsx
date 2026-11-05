@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { findAll, findByParentId } from "@/services/categoryService";
-import { findByParentIdIsNill } from "@/services/categoryService";
-interface CategoryOption {
+import { findByParentIdIsNull } from "@/services/categoryService";
+export interface CategoryOption {
     id: number;
     name: string;
     parent: CategoryOption | null;
@@ -33,7 +33,7 @@ export default function useCategory() {
     
     const fetchCategoriesParent = async () => {
         try {
-            const response = await findByParentIdIsNill();
+            const response = await findByParentIdIsNull();
             setCategoriesParent(response);
         } catch (error) {
             console.log("Lỗi không thể lấy", error)

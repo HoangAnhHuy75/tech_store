@@ -1,11 +1,21 @@
 import apiClient from "@/lib/axios";
 
-interface CreateSpecificationRequest {
+export interface SpecificationRequest {
     name : string;
     unit: string;
 }
-export const createSpecification = async (data: CreateSpecificationRequest) => {
+export const createSpecification = async (data: SpecificationRequest) => {
     const response = await apiClient.post("/specifications", data);
+    return response.data;
+}
+
+export const updateSpecification = async (id: number, data: SpecificationRequest) => {
+    const response = await apiClient.put(`/specifications/${id}`, data);
+    return response.data;
+}
+
+export const deleteSpecification = async (id: number) => {
+    const response = await apiClient.delete(`/specifications/${id}`);
     return response.data;
 }
 
