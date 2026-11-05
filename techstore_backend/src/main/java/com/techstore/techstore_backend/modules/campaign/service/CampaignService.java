@@ -8,6 +8,7 @@ import com.techstore.techstore_backend.modules.campaign.repository.CampaignRepos
 import com.techstore.techstore_backend.shared.exception.AppException;
 import com.techstore.techstore_backend.shared.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CampaignService {
     private final CampaignRepository campaignRepository;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public CampaignResponse createCampaign(CampaignRequest request) {
         validateCampaignTime(request.getStartTime(), request.getEndTime());
         validateCampaignBudget(request.getBudget());
@@ -32,6 +34,7 @@ public class CampaignService {
         return mapToCampaignResponse(campaignRepository.save(campaign));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public CampaignResponse updateCampaign(CampaignRequest request, Integer id) {
         Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CAMPAIGN_NOT_EXIST));
         if (campaign.getStatus().equals(CampaignStatus.END)) {
@@ -50,6 +53,7 @@ public class CampaignService {
         validateCampaignBudget(request.getBudget());
         campaign.setBudget(request.getBudget());
         campaign.setName(request.getName());
+        campaign.setStatus(request.getCampaignStatus());
         campaign.setStartTime(request.getStartTime());
         campaign.setEndTime(request.getEndTime());
         return mapToCampaignResponse(campaignRepository.save(campaign));

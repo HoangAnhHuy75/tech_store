@@ -30,6 +30,8 @@ public class CampaignRequest {
     @Positive(message = "Ngân sách phải > 0")
     BigDecimal budget;
 
+    CampaignStatus campaignStatus;
+
     @NotNull(message = "Thời gian bắt đầu không được để trống")
     LocalDateTime startTime;
 

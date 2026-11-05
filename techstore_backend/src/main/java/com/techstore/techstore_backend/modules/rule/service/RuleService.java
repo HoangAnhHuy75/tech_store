@@ -5,9 +5,7 @@ import com.techstore.techstore_backend.modules.campaign.repository.CampaignRepos
 import com.techstore.techstore_backend.modules.rule.dto.request.RuleRequest;
 import com.techstore.techstore_backend.modules.rule.dto.response.RuleResponse;
 import com.techstore.techstore_backend.modules.rule.entity.Rule;
-import com.techstore.techstore_backend.modules.rule.enums.RuleStatus;
 import com.techstore.techstore_backend.modules.rule.repository.RuleRepository;
-import com.techstore.techstore_backend.modules.user.enums.UserType;
 import com.techstore.techstore_backend.shared.exception.AppException;
 import com.techstore.techstore_backend.shared.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
