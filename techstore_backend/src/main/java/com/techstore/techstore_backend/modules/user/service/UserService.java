@@ -60,7 +60,7 @@ public class UserService {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponse> findAll() {
         List<User> listUser = userRepository.findAll();
         return listUser.stream()
                 .map(this::mapToUserResponse)
@@ -73,11 +73,23 @@ public class UserService {
         return mapToUserResponse(user);
     }
 
+    public UserResponse findByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
+        return mapToUserResponse(user);
+    }
+
+    public UserResponse findAdministrator() {
+        User admin = userRepository.findAdministrators().stream()
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
+        return mapToUserResponse(admin);
+    }
+
     public UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .password(user.getPassword())
                 .name(user.getName())
                 .phone(user.getPhone())
                 .userType(user.getUserType())

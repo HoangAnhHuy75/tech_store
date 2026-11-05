@@ -1,7 +1,7 @@
-// services/authService.ts
 import apiClient from "@/lib/axios";
-import Cookies from "js-cookie";
-// Hàm Đăng ký
+import { useAuthStore } from "@/stores/authStore";
+import { jwtDecode } from "jwt-decode";
+
 interface RegisterUserRequest {
   name: string;
   username: string;
@@ -19,11 +19,39 @@ export const registerUser = async (data: RegisterUserRequest) => {
   return response.data;
 };
 
+// Login
 export const loginUser = async (data: LoginRequest) => {
   const response = await apiClient.post("/auth/login", data);
-  const token = response.data?.result?.token;
-  if (token) {
-    Cookies.set("token", token, { expires: 7 }); // Lưu Token vào Cookie 7 ngày
+  const result = response.data?.result;
+  if (result?.token) {
+    const decoded = jwtDecode<{ sub: string; scope: string }>(
+      result.token
+    );
+    useAuthStore.getState().setAuth({
+      token: result.token,
+      userName: decoded.sub,
+      role: decoded.scope?.replace(/^ROLE_/, "") ?? null,
+    });
   }
   return response.data;
+};
+
+// Refresh Access Token
+export const refreshToken = async () => {
+  const response = await apiClient.post("/auth/refresh");
+  const result = response.data?.result;
+  if (result?.token) {
+    useAuthStore.getState().setToken(result.token);
+  }
+  return response.data;
+};
+
+// Logout
+export const logoutUser = async () => {
+  const token = useAuthStore.getState().token;
+  try {
+    await apiClient.post("/auth/logout", { token });
+  } finally {
+    useAuthStore.getState().clearAuth();
+  }
 };

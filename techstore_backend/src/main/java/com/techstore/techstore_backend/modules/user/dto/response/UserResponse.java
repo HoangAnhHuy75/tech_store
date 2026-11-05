@@ -18,7 +18,6 @@ public class UserResponse {
     String name;
     String phone;
     String username;
-    String password;
     UserType userType;
     Set<Role> roles;
 }

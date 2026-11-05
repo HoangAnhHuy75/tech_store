@@ -30,14 +30,32 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
+    public ResponseEntity<ApiResponse<List<UserResponse>>> findAll() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("Username {}:",authentication.getName());
-        List<UserResponse> listUser = userService.getAllUsers();
+        List<UserResponse> listUser = userService.findAll();
         return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
                 .code(200)
                 .message("Lấy danh sách user thành công")
                 .result(listUser)
+                .build());
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> findCurrentUser(Authentication authentication) {
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Lấy thông tin người dùng hiện tại thành công")
+                .result(userService.findByUsername(authentication.getName()))
+                .build());
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<ApiResponse<UserResponse>> findAdministrator() {
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Lấy thông tin admin thành công")
+                .result(userService.findAdministrator())
                 .build());
     }
 
@@ -51,13 +69,13 @@ public class UserController {
                 .build());
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
             @PathVariable Integer id,
             @RequestBody UserRequest request) {
 
         UserResponse userResponse = userService.updateUser(id, request);
-
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code(200)
                 .message("Cập nhật người dùng thành công")

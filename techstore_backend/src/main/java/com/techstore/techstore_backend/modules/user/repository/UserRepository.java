@@ -3,6 +3,8 @@ package com.techstore.techstore_backend.modules.user.repository;
 import com.techstore.techstore_backend.modules.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import java.util.List;
 
 import java.util.Optional;
 
@@ -10,4 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Integer> {
     public boolean existsByUsername(String username);
     public Optional<User> findByUsername(String username);
+
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = 'ADMIN' ORDER BY u.id ASC")
+    List<User> findAdministrators();
 }

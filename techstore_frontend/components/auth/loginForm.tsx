@@ -22,10 +22,10 @@ export default function LoginForm() {
                 username: data.username,
                 password: data.password,
             });
-            console.log("response là",response);
+            console.log("response là", response);
             if (response?.code === 201) {
                 console.log("Đăng nhập thành công:", response.message);
-                router.push('/home');
+                router.push('/');
             }
         } catch (error: unknown) {
             console.error("Lỗi khi đăng nhập:", error);
