@@ -42,6 +42,26 @@ public class ProductService {
         return mapToProductResponse(product);
     }
 
+    public ProductResponse updateProduct(Integer id, ProductRequest request) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXIST));
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXIST));
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setCategory(category);
+        if (request.getProductSpecificationRequests() != null && !request.getProductSpecificationRequests().isEmpty()) {
+            productSpecificationRepository.deleteAll(productSpecificationRepository.findByProductId(id));
+            createProductSpecification(product, request.getProductSpecificationRequests());
+        }
+        return mapToProductResponse(productRepository.save(product));
+    }
+
+    public void deleteProduct(Integer id) {
+        productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXIST));
+        productSpecificationRepository.deleteAll(productSpecificationRepository.findByProductId(id));
+        productRepository.deleteById(id);
+    }
+
     public void createProductSpecification(Product product, List<ProductSpecificationRequest> productSpecificationRequests) {
         List<Integer> specificationIds = productSpecificationRequests.stream().map(ProductSpecificationRequest::getSpecificationId).toList();
         List<Specification> specifications = specificationRepository.findAllById(specificationIds);

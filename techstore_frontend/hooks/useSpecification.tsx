@@ -1,10 +1,7 @@
 import { useState } from "react";
-import {
-    findAll,
-    findByCategories_Id,
-} from "@/services/specificationService";
+import { findAll, findByCategories_Id } from "@/services/specificationService";
 
-interface SpecificationOption {
+export interface SpecificationOption {
     id: number;
     name: string;
     unit: string;
@@ -12,32 +9,29 @@ interface SpecificationOption {
 
 export default function useSpecification() {
     const [specifications, setSpecifications] = useState<SpecificationOption[]>([]);
-    const [categorySpecifications, setCategorySpecifications] =
-        useState<SpecificationOption[]>([]);
+    const [categorySpecifications, setCategorySpecifications] = useState<SpecificationOption[]>([]);
 
     const fetchSpecifications = async () => {
         try {
             const response = await findAll();
             setSpecifications(response);
+            return response as SpecificationOption[];
         } catch (error) {
-            console.log("Lỗi", error);
+            console.log("Không thể lấy thông số:", error);
+            return [];
         }
     };
 
-    const fetchCategorySpecifications = async (categoryId: number) => {
+    const fetchCategorySpecifications = async (categoryId: number): Promise<SpecificationOption[]> => {
         try {
             const response = await findByCategories_Id(categoryId);
             setCategorySpecifications(response);
+            return response as SpecificationOption[];
         } catch (error) {
-            console.log("Lỗi", error);
+            console.log("Không thể lấy thông số theo loại:", error);
+            return [];
         }
     };
 
-    return {
-        specifications,
-        fetchSpecifications,
-        categorySpecifications,
-        setCategorySpecifications,
-        fetchCategorySpecifications
-    };
+    return { specifications, fetchSpecifications, categorySpecifications, setCategorySpecifications, fetchCategorySpecifications };
 }

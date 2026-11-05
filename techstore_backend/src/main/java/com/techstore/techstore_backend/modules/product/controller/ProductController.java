@@ -4,6 +4,7 @@ import com.techstore.techstore_backend.modules.product.dto.request.ProductReques
 import com.techstore.techstore_backend.shared.response.ApiResponse;
 import com.techstore.techstore_backend.modules.product.dto.response.ProductResponse;
 import com.techstore.techstore_backend.modules.product.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@RequiredArgsConstructor
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductResponse>>> findAll() {
@@ -34,5 +35,16 @@ public class ProductController {
                 .message("Tạo sản phẩm thành công")
                 .result(productResponse)
                 .build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@PathVariable Integer id, @RequestBody ProductRequest request) {
+        return ResponseEntity.ok(ApiResponse.<ProductResponse>builder().code(200).message("Cập nhật sản phẩm thành công").result(productService.updateProduct(id, request)).build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder().code(200).message("Xóa sản phẩm thành công").build());
     }
 }

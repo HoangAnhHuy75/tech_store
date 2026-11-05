@@ -49,6 +49,17 @@ public class SpecificationController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<SpecificationResponse>> updateSpecification(@PathVariable Integer id, @RequestBody SpecificationRequest request) {
+        return ResponseEntity.ok(ApiResponse.<SpecificationResponse>builder().code(200).message("Cập nhật thông số kỹ thuật thành công").result(specificationService.updateSpecification(id, request)).build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteSpecification(@PathVariable Integer id) {
+        specificationService.deleteSpecification(id);
+        return ResponseEntity.ok(ApiResponse.<Void>builder().code(200).message("Xóa thông số kỹ thuật thành công").build());
+    }
+
     @GetMapping("/categories/{id}")
     public ResponseEntity<ApiResponse<List<SpecificationResponse>>> findByCategories_Id(@PathVariable Integer id) {
         List<SpecificationResponse> specifications = specificationService.findByCategories_Id(id);
